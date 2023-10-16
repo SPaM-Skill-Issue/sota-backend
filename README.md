@@ -16,6 +16,14 @@ pip install -r requirements.txt
 uvicorn main:app
 ```
 
+## How to create database
+1. Create ```dump``` folder in mongodb folder.
+2. Copy ```Sota``` folder from ```dump_data``` in the repository to new ```dump``` folder that you create in mongodb folder.
+3. Run this command in terminal or docker terminal:
+```
+mongorestore  dump/
+```
+
 
 ## Demo values for collections
 ### Audient
