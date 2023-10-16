@@ -1,0 +1,26 @@
+name: 'Call Monorepo Sync'
+on:
+  push:
+    branches:
+      - main
+  
+  workflow_dispatch:
+
+jobs:
+  call:
+    name: 'Monorepo Sync'
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+    
+    steps:
+    - name: Call GitHub API
+      env:
+        CI_TOKEN: ${{ secrets.SKIS_BOT_PAT }}
+        PARENT_REPO: SPaM-Skill-Issue/sota
+        PARENT_BRANCH: main
+        WORKFLOW_ID: $SYNC_WORKFLOW_ID
+      run: |
+        curl -fL --retry 5 -X POST -H "Accept: application/vnd.github.v3+json" -H "Authorization: token ${{ env.CI_TOKEN }}" https://api.github.com/repos/${{ env.PARENT_REPO }}/actions/workflows/${{ env.WORKFLOW_ID }}/dispatches -d '{"ref": "${{ env.PARENT_BRANCH }}"}'
