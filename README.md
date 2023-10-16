@@ -5,11 +5,13 @@ This is SoTA backend repository
 SoTA or **S**ystem of **T**ournamental **A**thleticism is the software from IOC (Skill isuue? Group) which is part of Software Process and Project Management course.
 
 ## How to run
-Firstly, install the required packages using:
+1. Firstly, install the required packages using:
 ```
 pip install -r requirements.txt
 ```
-Then, to run the app use:
+2. Then create a ```.env``` file according to sample.env given.
+
+3. Lastly, to run the app, use:
 ```
 uvicorn main:app
 ```
