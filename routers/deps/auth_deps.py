@@ -15,7 +15,7 @@ class AuthScope(Enum):
 def check_auth_key(request: Request):
     try:
         authorization = request.headers["authorization"]
-    except AttributeError:
+    except KeyError:
         raise resp401
     if not authorization.startswith(authorization_type):
         raise resp401
