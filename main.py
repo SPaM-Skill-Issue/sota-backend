@@ -4,7 +4,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from decouple import config, Csv
 
 app = FastAPI()
-origins = ["*"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=config("ALLOWED_ORIGINS", cast=Csv()),
@@ -12,6 +11,17 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+authentication = FastAPI()
+authentication.add_middleware(
+    CORSMiddleware,
+    allow_origins=config("ALLOWED_AUTH_ORIGINS", cast=Csv()),
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.mount("/apigenkey", authentication)
 
 app.include_router(sports_router.router)
 app.include_router(sport_router.router)
