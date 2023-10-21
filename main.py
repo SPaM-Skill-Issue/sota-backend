@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from routers import sports_router, sport_router, medals_router, medal_router, audient_router, apikeygen_router
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from decouple import config, Csv
 
 app = FastAPI()
@@ -12,13 +13,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+auth_origins = config("ALLOWED_AUTH_ORIGINS", cast=Csv())
 authentication = FastAPI()
 authentication.add_middleware(
     CORSMiddleware,
-    allow_origins=config("ALLOWED_AUTH_ORIGINS", cast=Csv()),
+    allow_origins=auth_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+)
+authentication.add_middleware(
+    TrustedHostMiddleware,
+    allowed_hosts=auth_origins
 )
 
 app.mount("/apigenkey", authentication)
