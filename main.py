@@ -27,7 +27,7 @@ authentication.add_middleware(
     allowed_hosts=auth_origins
 )
 
-app.mount("/apigenkey", authentication)
+app.mount("/apikeygen", authentication)
 
 app.include_router(sports_router.router)
 app.include_router(sport_router.router)
@@ -36,7 +36,7 @@ app.include_router(medal_router.router)
 app.include_router(audient_router.router)
 
 # to be separated into another CORS configuration
-app.include_router(apikeygen_router.router)
+authentication.include_router(apikeygen_router.router)
 
 
 @app.get("/")

@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from .deps.auth_deps import AuthScope
 import random, string
 
-router = APIRouter(prefix="/apikeygen", tags=["keygen"])
+router = APIRouter(tags=["keygen"])
 
 
 class ScopeDict(BaseModel):
