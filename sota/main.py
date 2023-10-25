@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from routers import sports_router, sport_router, medals_router, medal_router, audient_router, apikeygen_router
+from .routers import sports_router, sport_router, medals_router, medal_router, audient_router, apikeygen_router
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from decouple import config, Csv
