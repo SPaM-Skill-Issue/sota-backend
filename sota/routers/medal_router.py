@@ -66,8 +66,8 @@ def get_medal_by_country(country_code: str):
         },
     ]
 
-    result = list(medal_collection.aggregate(pipeline))
-    return list(medal_collection.aggregate(pipeline))[0] if result else {}
+    country_medals = list(medal_collection.aggregate(pipeline))
+    return country_medals[0] if country_medals else {}
 
 
 @router.get("/s/{sport_id}")
