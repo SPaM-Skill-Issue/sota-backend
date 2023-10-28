@@ -1,7 +1,7 @@
 from typing import Annotated, List, Dict
 from enum import Enum
 from fastapi import Request, Header, HTTPException
-from database_connection import keys_collection
+from ...database_connection import keys_collection
 
 resp401 = HTTPException(status_code=401, detail="Unauthorized access")
 authorization_type = "Bearer"

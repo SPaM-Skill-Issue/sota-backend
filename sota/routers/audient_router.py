@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from database_connection import audient_collection
+from ..database_connection import audient_collection
 
 
 router = APIRouter(

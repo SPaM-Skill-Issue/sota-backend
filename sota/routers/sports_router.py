@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from database_connection import sport_detail_collection
+from ..database_connection import sport_detail_collection
 
 router = APIRouter(prefix="/sports", tags=["sports"])
 

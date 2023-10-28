@@ -130,3 +130,6 @@ dmypy.json
 
 # Mac OS items
 .DS_Store
+
+# Deployment config
+fly.toml

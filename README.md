@@ -13,7 +13,7 @@ pip install -r requirements.txt
 
 3. Lastly, to run the app, use:
 ```
-uvicorn main:app
+uvicorn sota.main:app
 ```
 
 ## How to create database

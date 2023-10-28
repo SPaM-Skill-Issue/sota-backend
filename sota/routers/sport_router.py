@@ -1,6 +1,6 @@
 from typing import Optional, Dict
 from fastapi import APIRouter
-from database_connection import sport_detail_collection, sub_sport_collection
+from ..database_connection import sport_detail_collection, sub_sport_collection
 
 
 router = APIRouter(prefix="/sport", tags=["sport"])

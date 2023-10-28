@@ -1,6 +1,6 @@
 from typing import Dict
 from fastapi import APIRouter, HTTPException
-from database_connection import keys_collection
+from ..database_connection import keys_collection
 from pydantic import BaseModel
 from .deps.auth_deps import AuthScope
 import random, string
