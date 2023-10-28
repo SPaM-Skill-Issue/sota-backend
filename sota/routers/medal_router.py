@@ -71,10 +71,10 @@ def get_medal_by_country(country_code: str):
 
 
 @router.get("/s/{sport_id}")
-def get_medal_by_sport(sport_id: str):
+def get_medal_by_sport(sport_id: int):
     pipeline = [
         {"$unwind": "$sports"},
-        {"$match": {"sports.sport_id": int(sport_id)}},
+        {"$match": {"sports.sport_id": sport_id}},
         {
             "$lookup": {
                 "from": sport_detail_collection.name,
