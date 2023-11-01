@@ -7,7 +7,7 @@ router = APIRouter(prefix="/medal", tags=["medal"])
 @router.get("/c/{country_code}")
 def get_medal_by_country(country_code: str):
     pipeline = [
-        {"$match": {"country_code": f"{country_code}"}},
+        {"$match": {"country_code": country_code}},
         {"$unwind": {"path": "$sports"}},
         {
             "$lookup": {
