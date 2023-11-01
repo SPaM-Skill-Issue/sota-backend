@@ -3,7 +3,7 @@ import pycountry
 from fastapi import APIRouter
 from pydantic import BaseModel
 from ..database_connection import medal_collection, sub_sport_collection
-
+from typing import List
 
 router = APIRouter(prefix="/medals", tags=["medals"])
 
@@ -56,7 +56,7 @@ class RequestParticipant(BaseModel):
 class RequestUpdateMedal(BaseModel):
     sport_id: int = Field(gt=0)
     sport_type_id: int = Field(gt=0)
-    participants: list[RequestParticipant]
+    participants: List[RequestParticipant]
 
     # This validator checks if the participating countries are valid for the given sport and sport type.
     @model_validator(mode="after")
@@ -100,16 +100,12 @@ async def update_medal(data: RequestUpdateMedal):
             "bronze": request_participant.medal.bronze,
         }
 
-        # Attempt to update existing document or create a new one using $elemMatch
+        # Attempt to update existing document or create a new one
         updated = medal_collection.update_one(
             {
                 "country_code": country_code,
-                "sports": {
-                    "$elemMatch": {
-                        "sport_id": data.sport_id,
-                        "type_id": data.sport_type_id,
-                    }
-                },
+                "sports.sport_id": data.sport_id,
+                "sports.type_id": data.sport_type_id,
             },
             {
                 "$set": {
