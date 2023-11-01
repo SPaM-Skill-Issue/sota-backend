@@ -7,11 +7,8 @@ router = APIRouter(prefix="/medal", tags=["medal"])
 @router.get("/c/{country_code}")
 def get_medal_by_country(country_code: str):
     pipeline = [
-        # Filter the documents based on the provided country code.
         {"$match": {"country_code": f"{country_code}"}},
-        # Deconstruct the "sports" array field from the input documents to output a document for each element.
         {"$unwind": {"path": "$sports"}},
-        # Join the current documents with the sport_detail_collection on the sport_id field.
         {
             "$lookup": {
                 "from": sport_detail_collection.name,
@@ -21,7 +18,6 @@ def get_medal_by_country(country_code: str):
             }
         },
         {"$unwind": {"path": "$sport_info"}},
-        # Group by sport_id to aggregate the medal counts.
         {
             "$group": {
                 "_id": {"sport_id": "$sports.sport_id"},
@@ -31,9 +27,16 @@ def get_medal_by_country(country_code: str):
                 "gold": {"$sum": "$sports.gold"},
                 "silver": {"$sum": "$sports.silver"},
                 "bronze": {"$sum": "$sports.bronze"},
+                "sub_sports": {
+                    "$push": {
+                        "sub_id": "$sports.type_id",
+                        "gold": "$sports.gold",
+                        "silver": "$sports.silver",
+                        "bronze": "$sports.bronze",
+                    }
+                },
             }
         },
-        # Further group by country_code to aggregate the total medal counts and form the individual_sports array.
         {
             "$group": {
                 "_id": "$country_code",
@@ -48,11 +51,11 @@ def get_medal_by_country(country_code: str):
                         "gold": "$gold",
                         "silver": "$silver",
                         "bronze": "$bronze",
+                        "sub_sports": "$sub_sports",
                     }
                 },
             }
         },
-        # Restructure the output fields.
         {
             "$project": {
                 "country": "$_id",
