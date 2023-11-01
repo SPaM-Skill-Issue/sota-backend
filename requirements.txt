@@ -2,4 +2,3 @@ fastapi
 python-decouple
 pymongo
 uvicorn
-pydantic
