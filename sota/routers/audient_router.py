@@ -11,6 +11,7 @@ router = APIRouter(
 )
 
 class RequestAudientData(BaseModel):
+    id: str
     country_code: str
     sport_id: List[int]
     gender: str
@@ -41,16 +42,11 @@ def get_audient():
 
 @router.post("/update_audient_info")
 async def update_audient_info(data: RequestListOfAudientData):
-    audient_id = 0
-    newest_document = audient_collection.find_one(sort=[("_id", DESCENDING)])
-
-    if newest_document:
-        audient_id = newest_document["_id"]
-
     audient_data = data.dict()
-    for audient_info in audient_data["audience"]:
-        audient_id += 1
-        audient_info["_id"] = audient_id
-
-    audient_collection.insert_many(audient_data["audience"])
+    for item in audient_data["audience"]:
+        audient_collection.update_one(
+            {"_id": item["id"]},
+            {"$set": item},
+            upsert=True
+        )
     return {"Success": audient_data}
