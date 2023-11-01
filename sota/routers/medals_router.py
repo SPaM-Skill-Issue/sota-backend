@@ -107,9 +107,9 @@ async def update_medal(data: RequestUpdateMedal):
                 "sports": {
                     "$elemMatch": {
                         "sport_id": data.sport_id,
-                        "type_id": data.sport_type_id
+                        "type_id": data.sport_type_id,
                     }
-                }
+                },
             },
             {
                 "$set": {
