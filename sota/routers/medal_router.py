@@ -74,10 +74,10 @@ def get_medal_by_country(country_code: str):
 def get_medal_by_sport(sport_id: int):
     pipeline = [
         {"$unwind": {"path": "$sports"}},
-        {"$match": {"sports.sport_id": 1}},
+        {"$match": {"sports.sport_id": sport_id}},
         {
             "$lookup": {
-                "from": "SportDetail",
+                "from": sport_detail_collection.name,
                 "localField": "sports.sport_id",
                 "foreignField": "sport_id",
                 "as": "sport_info",
