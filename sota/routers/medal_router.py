@@ -73,17 +73,17 @@ def get_medal_by_country(country_code: str):
 @router.get("/s/{sport_id}")
 def get_medal_by_sport(sport_id: int):
     pipeline = [
-        {"$unwind": "$sports"},
-        {"$match": {"sports.sport_id": sport_id}},
+        {"$unwind": {"path": "$sports"}},
+        {"$match": {"sports.sport_id": 1}},
         {
             "$lookup": {
-                "from": sport_detail_collection.name,
+                "from": "SportDetail",
                 "localField": "sports.sport_id",
                 "foreignField": "sport_id",
                 "as": "sport_info",
             }
         },
-        {"$unwind": "$sport_info"},
+        {"$unwind": {"path": "$sport_info"}},
         {
             "$group": {
                 "_id": "$country_code",
@@ -93,6 +93,14 @@ def get_medal_by_sport(sport_id: int):
                 "country_name": {"$first": "$country_name"},
                 "sport_id": {"$first": "$sports.sport_id"},
                 "sport_name": {"$first": "$sport_info.sport_name"},
+                "sub_sports": {
+                    "$push": {
+                        "sub_id": "$sports.type_id",
+                        "gold": "$sports.gold",
+                        "silver": "$sports.silver",
+                        "bronze": "$sports.bronze",
+                    }
+                },
             }
         },
         {
@@ -109,6 +117,7 @@ def get_medal_by_sport(sport_id: int):
                         "gold": "$gold",
                         "silver": "$silver",
                         "bronze": "$bronze",
+                        "sub_sports": "$sub_sports",
                     }
                 },
             }
