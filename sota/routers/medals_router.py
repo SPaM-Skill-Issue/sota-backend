@@ -100,12 +100,16 @@ async def update_medal(data: RequestUpdateMedal):
             "bronze": request_participant.medal.bronze,
         }
 
-        # Attempt to update existing document or create a new one
+        # Attempt to update existing document or create a new one using $elemMatch
         updated = medal_collection.update_one(
             {
                 "country_code": country_code,
-                "sports.sport_id": data.sport_id,
-                "sports.type_id": data.sport_type_id,
+                "sports": {
+                    "$elemMatch": {
+                        "sport_id": data.sport_id,
+                        "type_id": data.sport_type_id,
+                    }
+                },
             },
             {
                 "$set": {
