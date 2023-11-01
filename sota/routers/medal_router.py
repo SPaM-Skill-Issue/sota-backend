@@ -7,11 +7,8 @@ router = APIRouter(prefix="/medal", tags=["medal"])
 @router.get("/c/{country_code}")
 def get_medal_by_country(country_code: str):
     pipeline = [
-        # Filter the documents based on the provided country code.
-        {"$match": {"country_code": f"{country_code}"}},
-        # Deconstruct the "sports" array field from the input documents to output a document for each element.
+        {"$match": {"country_code": country_code}},
         {"$unwind": {"path": "$sports"}},
-        # Join the current documents with the sport_detail_collection on the sport_id field.
         {
             "$lookup": {
                 "from": sport_detail_collection.name,
@@ -21,7 +18,29 @@ def get_medal_by_country(country_code: str):
             }
         },
         {"$unwind": {"path": "$sport_info"}},
-        # Group by sport_id to aggregate the medal counts.
+        {
+            "$lookup": {
+                "from": sub_sport_collection.name,
+                "let": {
+                    "type_id_local": "$sports.type_id",
+                    "sport_id_local": "$sports.sport_id",
+                },
+                "pipeline": [
+                    {
+                        "$match": {
+                            "$expr": {
+                                "$and": [
+                                    {"$eq": ["$type_id", "$$type_id_local"]},
+                                    {"$eq": ["$sport_id", "$$sport_id_local"]},
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "as": "matched_from_SubSportType",
+            }
+        },
+        {"$unwind": {"path": "$matched_from_SubSportType"}},
         {
             "$group": {
                 "_id": {"sport_id": "$sports.sport_id"},
@@ -31,9 +50,17 @@ def get_medal_by_country(country_code: str):
                 "gold": {"$sum": "$sports.gold"},
                 "silver": {"$sum": "$sports.silver"},
                 "bronze": {"$sum": "$sports.bronze"},
+                "sub_sports": {
+                    "$push": {
+                        "sub_id": "$sports.type_id",
+                        "sub_name": "$matched_from_SubSportType.type_name",
+                        "gold": "$sports.gold",
+                        "silver": "$sports.silver",
+                        "bronze": "$sports.bronze",
+                    }
+                },
             }
         },
-        # Further group by country_code to aggregate the total medal counts and form the individual_sports array.
         {
             "$group": {
                 "_id": "$country_code",
@@ -48,11 +75,11 @@ def get_medal_by_country(country_code: str):
                         "gold": "$gold",
                         "silver": "$silver",
                         "bronze": "$bronze",
+                        "sub_sports": "$sub_sports",
                     }
                 },
             }
         },
-        # Restructure the output fields.
         {
             "$project": {
                 "country": "$_id",
