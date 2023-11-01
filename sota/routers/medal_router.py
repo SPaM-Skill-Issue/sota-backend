@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from ..database_connection import medal_collection, sport_detail_collection
+from ..database_connection import medal_collection, sport_detail_collection, sub_sport_collection
 
 router = APIRouter(prefix="/medal", tags=["medal"])
 
@@ -71,5 +71,92 @@ def get_medal_by_country(country_code: str):
 
 
 @router.get("/s/{sport_id}")
-def get_medal_by_sport(sport_id: str):
-    return {"test": sport_id}
+def get_medal_by_sport(sport_id: int):
+    pipeline = [
+        {"$unwind": {"path": "$sports"}},
+        {"$match": {"sports.sport_id": sport_id}},
+        {
+            "$lookup": {
+                "from": sport_detail_collection.name,
+                "localField": "sports.sport_id",
+                "foreignField": "sport_id",
+                "as": "sport_info",
+            }
+        },
+        {"$unwind": {"path": "$sport_info"}},
+        {
+            "$lookup": {
+                "from": sub_sport_collection.name,
+                "let": {
+                    "type_id_local": "$sports.type_id",
+                    "sport_id_local": "$sports.sport_id",
+                },
+                "pipeline": [
+                    {
+                        "$match": {
+                            "$expr": {
+                                "$and": [
+                                    {"$eq": ["$type_id", "$$type_id_local"]},
+                                    {"$eq": ["$sport_id", "$$sport_id_local"]},
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "as": "matched_from_SubSportType",
+            }
+        },
+        {"$unwind": {"path": "$matched_from_SubSportType"}},
+        {
+            "$group": {
+                "_id": "$country_code",
+                "gold": {"$sum": "$sports.gold"},
+                "silver": {"$sum": "$sports.silver"},
+                "bronze": {"$sum": "$sports.bronze"},
+                "country_name": {"$first": "$country_name"},
+                "sport_id": {"$first": "$sports.sport_id"},
+                "sport_name": {"$first": "$sport_info.sport_name"},
+                "sub_sports": {
+                    "$push": {
+                        "sub_id": "$sports.type_id",
+                        "sub_name": "$matched_from_SubSportType.type_name",
+                        "gold": "$sports.gold",
+                        "silver": "$sports.silver",
+                        "bronze": "$sports.bronze",
+                    }
+                },
+            }
+        },
+        {
+            "$group": {
+                "_id": "$sport_id",
+                "sport_name": {"$first": "$sport_name"},
+                "gold": {"$sum": "$gold"},
+                "silver": {"$sum": "$silver"},
+                "bronze": {"$sum": "$bronze"},
+                "individual_countries": {
+                    "$push": {
+                        "country_code": "$_id",
+                        "country_name": "$country_name",
+                        "gold": "$gold",
+                        "silver": "$silver",
+                        "bronze": "$bronze",
+                        "sub_sports": "$sub_sports",
+                    }
+                },
+            }
+        },
+        {
+            "$project": {
+                "_id": 0,
+                "sport": "$_id",
+                "sport_name": 1,
+                "gold": 1,
+                "silver": 1,
+                "bronze": 1,
+                "individual_countries": 1,
+            }
+        },
+    ]
+    sport_medals = list(medal_collection.aggregate(pipeline))
+    return sport_medals[0] if sport_medals else {}
