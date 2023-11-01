@@ -74,7 +74,7 @@ class RequestUpdateMedal(BaseModel):
             country = participant.country
             if country not in participating_countries:
                 raise ValueError(
-                    f"Country {country} is not participating in the given sport and type"
+                    f"Country {country} is not participating in the given sport_id {sport_id} and type_id {sport_type_id}"
                 )
         return self
 
