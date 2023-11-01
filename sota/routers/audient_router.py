@@ -7,7 +7,15 @@ router = APIRouter(
     tags=["audient"]
 )
 
+def convert_data(data):
+    return{
+        "country": data["country_code"],
+        "sport_id": data["sport_id"],
+        "gender": data["gender"],
+        "age": data["age"]
+    }
 
 @router.get("/")
 def get_audient():
-    return {"test": "all good"}
+    audient_all = [convert_data(audient) for audient in audient_collection.find()]
+    return audient_all
