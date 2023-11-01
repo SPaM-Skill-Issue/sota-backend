@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from ..database_connection import medal_collection, sport_detail_collection
+from ..database_connection import medal_collection, sport_detail_collection, sub_sport_collection
 
 router = APIRouter(prefix="/medal", tags=["medal"])
 
@@ -19,6 +19,29 @@ def get_medal_by_country(country_code: str):
         },
         {"$unwind": {"path": "$sport_info"}},
         {
+            "$lookup": {
+                "from": sub_sport_collection.name,
+                "let": {
+                    "type_id_local": "$sports.type_id",
+                    "sport_id_local": "$sports.sport_id",
+                },
+                "pipeline": [
+                    {
+                        "$match": {
+                            "$expr": {
+                                "$and": [
+                                    {"$eq": ["$type_id", "$$type_id_local"]},
+                                    {"$eq": ["$sport_id", "$$sport_id_local"]},
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "as": "matched_from_SubSportType",
+            }
+        },
+        {"$unwind": {"path": "$matched_from_SubSportType"}},
+        {
             "$group": {
                 "_id": {"sport_id": "$sports.sport_id"},
                 "sport_name": {"$first": "$sport_info.sport_name"},
@@ -30,6 +53,7 @@ def get_medal_by_country(country_code: str):
                 "sub_sports": {
                     "$push": {
                         "sub_id": "$sports.type_id",
+                        "sub_name": "$matched_from_SubSportType.type_name",
                         "gold": "$sports.gold",
                         "silver": "$sports.silver",
                         "bronze": "$sports.bronze",
