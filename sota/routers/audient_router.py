@@ -1,8 +1,9 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from pymongo import DESCENDING
 from pydantic import BaseModel, validator
 from typing import List
 from ..database_connection import audient_collection
+from .deps.auth_deps import check_auth_key, CheckPermissionsOfKey, AuthScope
 
 
 router = APIRouter(
@@ -40,7 +41,12 @@ def get_audient():
     audient_all = [convert_data(audient) for audient in audient_collection.find()]
     return audient_all
 
-@router.post("/update_audient_info")
+@router.post("/update_audient_info", dependencies=[
+    Depends(check_auth_key),
+    Depends(CheckPermissionsOfKey([
+        AuthScope.PUBLISH_AUDIENCE
+    ]))
+])
 async def update_audient_info(data: RequestListOfAudientData):
     audient_data = data.dict()
     for item in audient_data["audience"]:
