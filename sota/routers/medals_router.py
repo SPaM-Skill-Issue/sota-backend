@@ -1,8 +1,9 @@
 from pydantic import BaseModel, model_validator, Field
 import pycountry
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 from ..database_connection import medal_collection, sub_sport_collection
+from .deps.auth_deps import check_auth_key, CheckPermissionsOfKey, AuthScope
 
 
 router = APIRouter(prefix="/medals", tags=["medals"])
@@ -88,7 +89,12 @@ def get_participating_countries(sport_id: int, sport_type_id: int) -> list:
     return detail["participating_countries"] if detail else []
 
 
-@router.post("/update_medal")
+@router.post("/update_medal", dependencies=[
+    Depends(check_auth_key),
+    Depends(CheckPermissionsOfKey([
+        AuthScope.PUBLISH_MEDAL
+    ]))
+])
 async def update_medal(data: RequestUpdateMedal):
     for request_participant in data.participants:
         country_code = request_participant.country
