@@ -3,7 +3,7 @@ from typing import List
 
 # Third-party imports
 from fastapi import APIRouter, Depends
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, Field, validator
 import pycountry
 
 # Local application imports
@@ -20,7 +20,7 @@ class RequestAudientData(BaseModel):
     country_code: str
     sport_id: List[int]
     gender: str
-    age: int
+    age: int = Field(ge=0)
 
     @validator("gender")
     def validate_gender(cls, value):
