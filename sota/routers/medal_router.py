@@ -188,105 +188,106 @@ def get_medal_by_sport(sport_id: int):
     sport_medals = list(medal_collection.aggregate(pipeline))
     return sport_medals[0] if sport_medals else {}
 
+
 @router.get("/s/{sport_id}/t/{subsport_id}")
 def get_medal_by_subsport(sport_id: int, subsport_id: int):
     pipeline = [
-    {
-        '$unwind': {
-            'path': '$sports'
-        }
-    }, {
-        '$match': {
-            'sports.sport_id': sport_id, 
-            'sports.type_id': subsport_id
-        }
-    }, {
-        '$lookup': {
-            'from': sport_detail_collection.name, 
-            'localField': 'sports.sport_id', 
-            'foreignField': 'sport_id', 
-            'as': 'sportdetail'
-        }
-    }, {
-        '$unwind': {
-            'path': '$sportdetail'
-        }
-    }, {
-        '$lookup': {
-            'from': sub_sport_collection.name, 
-            'let': {
-                'type_id_local': '$sports.type_id', 
-                'sport_id_local': '$sports.sport_id'
-            }, 
-            'pipeline': [
-                {
-                    '$match': {
-                        '$expr': {
-                            '$and': [
-                                {
-                                    '$eq': [
-                                        '$type_id', '$$type_id_local'
-                                    ]
-                                }, {
-                                    '$eq': [
-                                        '$sport_id', '$$sport_id_local'
-                                    ]
-                                }
-                            ]
+        {
+            '$unwind': {
+                'path': '$sports'
+            }
+        }, {
+            '$match': {
+                'sports.sport_id': sport_id,
+                'sports.type_id': subsport_id
+            }
+        }, {
+            '$lookup': {
+                'from': sport_detail_collection.name,
+                'localField': 'sports.sport_id',
+                'foreignField': 'sport_id',
+                'as': 'sportdetail'
+            }
+        }, {
+            '$unwind': {
+                'path': '$sportdetail'
+            }
+        }, {
+            '$lookup': {
+                'from': sub_sport_collection.name,
+                'let': {
+                    'type_id_local': '$sports.type_id',
+                    'sport_id_local': '$sports.sport_id'
+                },
+                'pipeline': [
+                    {
+                        '$match': {
+                            '$expr': {
+                                '$and': [
+                                    {
+                                        '$eq': [
+                                            '$type_id', '$$type_id_local'
+                                        ]
+                                    }, {
+                                        '$eq': [
+                                            '$sport_id', '$$sport_id_local'
+                                        ]
+                                    }
+                                ]
+                            }
                         }
                     }
-                }
-            ], 
-            'as': 'matched_from_SubSportType'
-        }
-    }, {
-        '$unwind': {
-            'path': '$matched_from_SubSportType'
-        }
-    }, {
-        '$group': {
-            '_id': {
-                'sportid': '$sports.sport_id', 
-                'typeid': '$sports.type_id'
-            }, 
-            'gold': {
-                '$sum': '$sports.gold'
-            }, 
-            'silver': {
-                '$sum': '$sports.silver'
-            }, 
-            'bronze': {
-                '$sum': '$sports.bronze'
-            }, 
-            'sport_name': {
-                '$first': '$sportdetail.sport_name'
-            }, 
-            'type_name': {
-                '$first': '$matched_from_SubSportType.type_name'
-            }, 
-            'individual_countries': {
-                '$push': {
-                    'country_code': '$country_code', 
-                    'country_name': '$country_name', 
-                    'gold': '$sports.gold', 
-                    'silver': '$sports.silver', 
-                    'bronze': '$sports.bronze'
+                ],
+                'as': 'matched_from_SubSportType'
+            }
+        }, {
+            '$unwind': {
+                'path': '$matched_from_SubSportType'
+            }
+        }, {
+            '$group': {
+                '_id': {
+                    'sportid': '$sports.sport_id',
+                    'typeid': '$sports.type_id'
+                },
+                'gold': {
+                    '$sum': '$sports.gold'
+                },
+                'silver': {
+                    '$sum': '$sports.silver'
+                },
+                'bronze': {
+                    '$sum': '$sports.bronze'
+                },
+                'sport_name': {
+                    '$first': '$sportdetail.sport_name'
+                },
+                'type_name': {
+                    '$first': '$matched_from_SubSportType.type_name'
+                },
+                'individual_countries': {
+                    '$push': {
+                        'country_code': '$country_code',
+                        'country_name': '$country_name',
+                        'gold': '$sports.gold',
+                        'silver': '$sports.silver',
+                        'bronze': '$sports.bronze'
+                    }
                 }
             }
+        }, {
+            '$project': {
+                'sport_id': '$_id.sportid',
+                'sport_name': '$sport_name',
+                'sub_sport_id': '$_id.typeid',
+                'sub_sport_name': '$type_name',
+                'gold': 1,
+                'silver': 1,
+                'bronze': 1,
+                'individual_countries': '$individual_countries',
+                '_id': 0
+            }
         }
-    }, {
-        '$project': {
-            'sport_id': '$_id.sportid', 
-            'sport_name': '$sport_name', 
-            'sub_sport_id': '$_id.typeid', 
-            'sub_sport_name': '$type_name', 
-            'gold': 1, 
-            'silver': 1, 
-            'bronze': 1, 
-            'invidual_countries': '$individual_countries', 
-            '_id': 0
-        }
-    }
-]
+    ]
     sport_medals = list(medal_collection.aggregate(pipeline))
     return sport_medals[0] if sport_medals else {}
