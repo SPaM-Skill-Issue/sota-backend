@@ -1,5 +1,15 @@
-from fastapi import FastAPI
-from .routers import sports_router, sport_router, medals_router, medal_router, audient_router, apikeygen_router
+from fastapi import FastAPI, Request, status
+from fastapi.encoders import jsonable_encoder
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
+from .routers import (
+    sports_router,
+    sport_router,
+    medals_router,
+    medal_router,
+    audient_router,
+    apikeygen_router,
+)
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from decouple import config, Csv
@@ -22,10 +32,7 @@ authentication.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-authentication.add_middleware(
-    TrustedHostMiddleware,
-    allowed_hosts=auth_origins
-)
+authentication.add_middleware(TrustedHostMiddleware, allowed_hosts=auth_origins)
 
 app.mount("/apikeygen", authentication)
 
@@ -37,6 +44,16 @@ app.include_router(audient_router.router)
 
 # to be separated into another CORS configuration
 authentication.include_router(apikeygen_router.router)
+
+
+@app.exception_handler(RequestValidationError)
+async def request_validation_exception_handler(
+    request: Request, exc: RequestValidationError
+):
+    return JSONResponse(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        content=jsonable_encoder({"detail": exc.errors(), "body": exc.body}),
+    )
 
 
 @app.get("/")
