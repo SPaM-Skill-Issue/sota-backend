@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch
-from base import setUpTest
+from .base import setUpTest
 from fastapi import status
 
 

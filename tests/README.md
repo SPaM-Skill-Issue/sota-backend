@@ -25,19 +25,19 @@ To execute the tests, you will need to have Python and the necessary dependencie
 
 Use the following command to run all tests:
 
-You need to run the tests with an environment variable (e.g., `TEST=True`), please use the following format:
+You need to run the tests with an environment variable (e.g., `TESTING=True`), please use the following format:
 
 ```bash
 # For Unix-like systems
-TEST=True python -m unittest discover tests
+TESTING=True python -m unittest discover
 
 # For Windows Command Line
-set TEST=True
-python -m unittest discover tests
+set TESTING=True
+python -m unittest discover
 
 # For Windows PowerShell
-$env:TEST="True"
-python -m unittest discover tests
+$env:TESTING="True"
+python -m unittest discover
 ```
 
 ### Individual Test File Execution
@@ -45,7 +45,7 @@ python -m unittest discover tests
 To run tests from an individual file, use the following command format:
 
 ```bash
-python -m unittest tests/test_filename.py
+TESTING=True python -m unittest tests/test_filename.py
 ```
 
 Replace `test_filename.py` with the actual file name, such as `test_authentication.py`.

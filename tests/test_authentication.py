@@ -1,5 +1,5 @@
 import unittest
-from base import setUpTest
+from .base import setUpTest
 from fastapi import status
 
 
