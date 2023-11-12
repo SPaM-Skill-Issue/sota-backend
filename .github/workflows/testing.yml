@@ -8,6 +8,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      ALLOWED_ORIGINS: '["*"]'
+      ALLOWED_AUTH_ORIGINS: '["*"]'
+      DATABASE: Sota
+      SPORT_DETAIL_COLLECTION: SportDetail
+      SUB_SPORT_COLLECTION: SubSportType
+      AUDIENT_COLLECTION: Audient
+      MEDAL_COLLECTION: Medal
+      KEYS_COLLECTION: Keys
+      TESTING: True
     steps:
       - name: Check Out Repository
         uses: actions/checkout@v4
@@ -20,5 +30,5 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       - name: Run unittests
-        run: TESTING=True python -m unittest discover
+        run: python -m unittest discover
         
