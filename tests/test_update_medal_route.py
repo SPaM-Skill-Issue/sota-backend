@@ -118,7 +118,7 @@ class TestUpdateMedal(setUpTest):
             body_with_non_exist_sport_type_id,
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
+        
     @classmethod
     def tearDownClass(cls):
         """Clean up resources after all tests have been executed."""

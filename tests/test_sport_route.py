@@ -3,13 +3,12 @@ from unittest.mock import patch
 from .base import setUpTest
 from fastapi import status
 
-
 class TestSportRouter(setUpTest):
     """
-    Tests the functionality of the SportRouter in handling requests for sport details.
+    Test suite for the SportRouter's functionality in handling sport detail requests.
 
     This test class covers scenarios for retrieving sport information based on sport ID,
-    including handling of existing and non-existing sport IDs.
+    including handling both existing and non-existing sport IDs.
     """
 
     EXISTING_SPORT_ID = 1
@@ -33,13 +32,13 @@ class TestSportRouter(setUpTest):
 
     @classmethod
     def setUpClass(cls):
-        """Set up necessary resources before running tests."""
+        """Set up the necessary resources before running the tests."""
         super().setUpClass()
 
     @patch("sota.routers.sport_router.retrieve_sport_info")
     def test_get_sport_id_with_existing_sport_id(self, mock_retrieve_sport_info):
         """
-        Verifies that the endpoint '/sport/{sport_id}' correctly returns sport details
+        Verify that the endpoint '/sport/{sport_id}' correctly returns sport details
         for an existing sport ID.
         """
         mock_retrieve_sport_info.return_value = self.MOCK_SPORT_DATA
@@ -51,7 +50,7 @@ class TestSportRouter(setUpTest):
     @patch("sota.routers.sport_router.retrieve_sport_info")
     def test_get_sport_id_with_non_existing_sport_id(self, mock_retrieve_sport_info):
         """
-        Ensures that the endpoint '/sport/{sport_id}' returns an empty dictionary
+        Ensure that the endpoint '/sport/{sport_id}' returns an empty dictionary
         when queried with a non-existing sport ID.
         """
         mock_retrieve_sport_info.return_value = {}
