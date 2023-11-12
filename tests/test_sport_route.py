@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import patch
 from .base import setUpTest
 from fastapi import status
+import itertools
 
 class TestSportRouter(setUpTest):
     """
@@ -14,8 +15,8 @@ class TestSportRouter(setUpTest):
     EXISTING_SPORT_ID = 1
     NON_EXISTING_SPORT_ID = int(1e9)
 
-    MOCK_SPORT_DATA = [
-        {
+    MOCK_SPORT_DATA = itertools.tee(
+        iter([{
             "sport_id": EXISTING_SPORT_ID,
             "sport_name": "Archery",
             "sport_summary": "Archery is good",
@@ -27,8 +28,9 @@ class TestSportRouter(setUpTest):
                     "participating_countries": ["AU", "US"],
                 }
             ],
-        }
-    ]
+        }]),
+        2,
+    )
 
     @classmethod
     def setUpClass(cls):
@@ -41,10 +43,10 @@ class TestSportRouter(setUpTest):
         Verify that the endpoint '/sport/{sport_id}' correctly returns sport details
         for an existing sport ID.
         """
-        mock_retrieve_sport_info.return_value = self.MOCK_SPORT_DATA
+        mock_retrieve_sport_info.return_value = self.MOCK_SPORT_DATA[0]
         response = self.fastapi_client.get(f"/sport/{self.EXISTING_SPORT_ID}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json(), self.MOCK_SPORT_DATA[0])
+        self.assertEqual(response.json(), list(self.MOCK_SPORT_DATA[1])[0])
         mock_retrieve_sport_info.assert_called_once_with(self.EXISTING_SPORT_ID)
 
     @patch("sota.routers.sport_router.retrieve_sport_info")
