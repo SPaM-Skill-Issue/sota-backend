@@ -1,4 +1,3 @@
-
 # Testing Documentation for SOTA API
 
 ## Overview
@@ -9,9 +8,11 @@ This document provides instructions and information about the test suites for th
 
 The tests are organized into several files, each targeting a specific aspect of the API:
 
-- `test_authentication.py`: Tests related to user authentication and token validation.
-- `test_sport_router.py`: Focuses on testing the sports-related routes and their interactions with the database.
-- `test_update_medal_router.py`: Tests the functionality for updating medal information, ensuring data integrity and proper request handling.
+- `test_authentication.py`: Tests related to user authentication and token validation, ensuring that endpoints behave correctly under various authentication scenarios.
+- `test_get_medal_route.py`: Focuses on testing the retrieval of medal information, verifying correct responses for both existing and non-existing parameters.
+- `test_sport_route.py`: Tests the functionality of the SportRouter, covering scenarios for retrieving sport information based on sport ID.
+- `test_update_audient_info.py`: Includes tests for updating audient information, covering various scenarios including valid and invalid request bodies.
+- `test_update_medal_route.py`: Tests for the `/medals/update_medal` endpoint, ensuring correct handling of medal update requests under different scenarios.
 
 ### Base Setup for Tests (`base.py`)
 
@@ -51,9 +52,5 @@ TESTING=True python -m unittest tests/test_filename.py
 Replace `test_filename.py` with the actual file name, such as `test_authentication.py`.
 
 ## Important Notes
-
-- Ensure that the MongoDB service is running if you are not using `mongomock`.
 - The test data for MongoDB is loaded from BSON files located in the `dump_data/Sota` directory. Each collection has a corresponding BSON file.
 - The FastAPI test client is used for sending requests to API endpoints within the test cases.
-- After the tests are run, the `tearDownClass` method in `base.py` ensures clean-up of the database and test client.
-

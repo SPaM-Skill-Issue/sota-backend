@@ -41,7 +41,6 @@ class CheckPermissionsOfKey:
     def __call__(self, request: Request) -> bool:
         try:
             key = request.state.key
-            print(key)
             allowed_perms: Dict = key["scope"]
             for perm in self.scope:
                 if not perm.value in allowed_perms.keys():
