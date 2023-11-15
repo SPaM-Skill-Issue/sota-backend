@@ -3,3 +3,5 @@ python-decouple
 pymongo
 uvicorn
 pycountry
+httpx
+mongomock
