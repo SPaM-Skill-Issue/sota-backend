@@ -4,7 +4,7 @@ from ..database_connection import sport_detail_collection
 router = APIRouter(prefix="/sports", tags=["sports"])
 
 
-@router.get("/")
+@router.get("")
 def get_all_sports_id():
 
     sport_pairs = sport_detail_collection.aggregate(

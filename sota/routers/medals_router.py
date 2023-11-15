@@ -15,7 +15,7 @@ country_codes = [country.alpha_2 for country in pycountry.countries]
 router = APIRouter(prefix="/medals", tags=["medals"])
 
 
-@router.get("/")
+@router.get("")
 def get_medals():
     pipeline = [
         {"$unwind": {"path": "$sports"}},
