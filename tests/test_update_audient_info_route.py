@@ -14,6 +14,12 @@ class TestUpdateAudientInfo(setUpTest):
     """
 
     AUDIENT_TOKEN = "audie" * 4
+    KEYS_DATA = [
+        {
+            "key": AUDIENT_TOKEN,
+            "scope": {"PUBLISH_AUDIENCE": True, "PUBLISH_MEDAL": False},
+        },
+    ]
 
     AUDIENT_ID = "1"
     UPDATE_AUDIENT_INFO_PAYLOAD = {
@@ -34,18 +40,7 @@ class TestUpdateAudientInfo(setUpTest):
     def setUpClass(cls):
         """Set up the test environment and insert necessary authentication keys."""
         super().setUpClass()
-        cls._insert_authentication_keys()
-
-    @classmethod
-    def _insert_authentication_keys(cls):
-        """Insert mock authentication keys into the database."""
-        keys_data = [
-            {
-                "key": cls.AUDIENT_TOKEN,
-                "scope": {"PUBLISH_AUDIENCE": True, "PUBLISH_MEDAL": False},
-            },
-        ]
-        cls.db["Keys"].insert_many(keys_data)
+        cls.insert_authentication_keys(cls.KEYS_DATA)
 
     def test_update_audient_info_with_correct_body(self):
         """

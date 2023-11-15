@@ -4,6 +4,7 @@ from unittest.mock import patch
 from fastapi import status
 import itertools
 
+
 class TestGetMedal(setUpTest):
     """
     Test suite for retrieving medal information in the SOTA API.
@@ -165,7 +166,7 @@ class TestGetMedal(setUpTest):
     @patch("sota.routers.medal_router.medal_collection.aggregate")
     def test_get_medal_by_sport_id_with_unrecorded_sport_id(
         self, mock_retrieve_medal_by_sport_id
-    ):  
+    ):
         """
         Test the retrieval of an empty object for an unrecorded sport ID.
 
@@ -181,7 +182,7 @@ class TestGetMedal(setUpTest):
     @patch("sota.routers.medal_router.medal_collection.aggregate")
     def test_get_medal_by_subsport_id_with_by_recorded_sport_id_and_sub_sport_id(
         self, mock_retrieve_medal
-    ):  
+    ):
         """
         Test the retrieval of medal details for a recorded sport ID and subsport ID.
 

@@ -14,6 +14,16 @@ class TestAuthentication(setUpTest):
 
     VALID_TOKEN = "token" * 4
     AUDIENT_TOKEN = "audie" * 4
+    KEYS_DATA = [
+        {
+            "key": VALID_TOKEN,
+            "scope": {"PUBLISH_AUDIENCE": True, "PUBLISH_MEDAL": True},
+        },
+        {
+            "key": AUDIENT_TOKEN,
+            "scope": {"PUBLISH_AUDIENCE": True, "PUBLISH_MEDAL": False},
+        },
+    ]
 
     # Test data payloads
     UPDATE_AUDIENCE_INFO_PAYLOAD = {
@@ -36,26 +46,7 @@ class TestAuthentication(setUpTest):
         Prepare the test environment by setting up a mock database and inserting necessary authentication keys.
         """
         super().setUpClass()
-        cls._insert_authentication_keys()
-
-    @classmethod
-    def _insert_authentication_keys(cls):
-        """
-        Inserts mock authentication keys into the database to be used in the tests.
-
-        Includes keys with different scopes to test different permission levels.
-        """
-        keys_data = [
-            {
-                "key": cls.VALID_TOKEN,
-                "scope": {"PUBLISH_AUDIENCE": True, "PUBLISH_MEDAL": True},
-            },
-            {
-                "key": cls.AUDIENT_TOKEN,
-                "scope": {"PUBLISH_AUDIENCE": True, "PUBLISH_MEDAL": False},
-            },
-        ]
-        cls.db["Keys"].insert_many(keys_data)
+        cls.insert_authentication_keys(cls.KEYS_DATA)
 
     def test_access_with_valid_token(self):
         """

@@ -12,6 +12,14 @@ class TestUpdateMedal(setUpTest):
     handling requests with missing fields, and handling updates for unparticipating countries.
     """
 
+    MEDAL_TOKEN = "medal" * 4
+    KEYS_DATA = [
+        {
+            "key": MEDAL_TOKEN,
+            "scope": {"PUBLISH_AUDIENCE": False, "PUBLISH_MEDAL": True},
+        },
+    ]
+
     UPDATE_MEDAL_PAYLOAD = {
         "sport_id": 1,
         "sport_type_id": 1,
@@ -19,7 +27,7 @@ class TestUpdateMedal(setUpTest):
             {"country": "US", "medal": {"gold": 1, "silver": 0, "bronze": 0}}
         ],
     }
-    MEDAL_TOKEN = "medal" * 4
+
     NON_EXISTING_SPORT_ID = int(1e9)
     NON_EXISTING_SPORT_TYPE_ID = int(1e9)
 
@@ -27,18 +35,7 @@ class TestUpdateMedal(setUpTest):
     def setUpClass(cls):
         """Prepare the test environment and insert necessary authentication keys."""
         super().setUpClass()
-        cls._insert_authentication_keys()
-
-    @classmethod
-    def _insert_authentication_keys(cls):
-        """Insert mock authentication keys into the database."""
-        keys_data = [
-            {
-                "key": cls.MEDAL_TOKEN,
-                "scope": {"PUBLISH_AUDIENCE": False, "PUBLISH_MEDAL": True},
-            },
-        ]
-        cls.db["Keys"].insert_many(keys_data)
+        cls.insert_authentication_keys(cls.KEYS_DATA)
 
     def test_update_medal_with_correct_body(self):
         """Ensure successful medal update with valid request payload."""
@@ -118,7 +115,7 @@ class TestUpdateMedal(setUpTest):
             body_with_non_exist_sport_type_id,
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        
+
     @classmethod
     def tearDownClass(cls):
         """Clean up resources after all tests have been executed."""

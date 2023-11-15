@@ -4,6 +4,7 @@ from .base import setUpTest
 from fastapi import status
 import itertools
 
+
 class TestSportRouter(setUpTest):
     """
     Test suite for the SportRouter's functionality in handling sport detail requests.
@@ -16,19 +17,23 @@ class TestSportRouter(setUpTest):
     NON_EXISTING_SPORT_ID = int(1e9)
 
     MOCK_SPORT_DATA = itertools.tee(
-        iter([{
-            "sport_id": EXISTING_SPORT_ID,
-            "sport_name": "Archery",
-            "sport_summary": "Archery is good",
-            "participating_countries": ["AU", "US"],
-            "sport_types": [
+        iter(
+            [
                 {
-                    "type_id": 1,
-                    "type_name": "Individual Men's",
+                    "sport_id": EXISTING_SPORT_ID,
+                    "sport_name": "Archery",
+                    "sport_summary": "Archery is good",
                     "participating_countries": ["AU", "US"],
+                    "sport_types": [
+                        {
+                            "type_id": 1,
+                            "type_name": "Individual Men's",
+                            "participating_countries": ["AU", "US"],
+                        }
+                    ],
                 }
-            ],
-        }]),
+            ]
+        ),
         2,
     )
 

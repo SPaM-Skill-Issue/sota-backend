@@ -32,13 +32,13 @@ class setUpTest(unittest.TestCase):
         cls.db = cls.mongo_mock_client["Sota"]  # Reference to the 'Sota' database
 
         # Load test data into the database
-        cls._load_test_data()
+        cls.load_test_data()
 
         # Initialize FastAPI test client
         cls.fastapi_client = TestClient(app)
 
     @classmethod
-    def _load_test_data(cls):
+    def load_test_data(cls):
         """
         Loads test data from BSON files into the mock MongoDB database.
 
@@ -51,6 +51,16 @@ class setUpTest(unittest.TestCase):
                 collection_data = list(decode_file_iter(file))
                 if collection_data:
                     cls.db[collection_name].insert_many(collection_data)
+
+    @classmethod
+    def insert_authentication_keys(cls, keys_data):
+        """
+        Inserts mock authentication keys into the database.
+
+        Args:
+            keys_data (list): A list of dictionaries, each containing a key and its scope.
+        """
+        cls.db["Keys"].insert_many(keys_data)
 
     def post_request(self, url, token, payload):
         """
