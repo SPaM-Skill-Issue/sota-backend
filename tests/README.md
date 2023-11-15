@@ -21,7 +21,7 @@ This document outlines the testing strategy and plan for the SOTA API. The tests
       1. Access the API route
     - **Test Data:** - Token
     - **Expected Result:** Passes the check for auth key.
-    - **Status:** To be tested
+    - **Status:** Pass
 
   - **Test Case:** Without token
     - **Pre-conditions:** None
@@ -29,7 +29,7 @@ This document outlines the testing strategy and plan for the SOTA API. The tests
       1. Access the API route
     - **Test Data:** None
     - **Expected Result:** Fails the check for auth key. Response returns status 401.
-    - **Status:** To be tested
+    - **Status:** Pass
 
 - **Test Scenario:** Accessing protected API route that requires permission
   - **Test Case:** With correct permission
@@ -39,7 +39,7 @@ This document outlines the testing strategy and plan for the SOTA API. The tests
       1. Access the API route
     - **Test Data:** - Token with correct permission
     - **Expected Result:** Passes the check for auth key and permission.
-    - **Status:** To be tested
+    - **Status:** Pass
 
   - **Test Case:** Without correct permission
     - **Pre-conditions:** 
@@ -48,7 +48,7 @@ This document outlines the testing strategy and plan for the SOTA API. The tests
       1. Access the API route
     - **Test Data:** - Token without correct permission
     - **Expected Result:** Passes the check for auth key but fails permission check. Response returns status 401.
-    - **Status:** To be tested
+    - **Status:** Pass
 
 ### Sports API Tests
 - **Test Scenario:** GET /sport/:id
@@ -58,7 +58,7 @@ This document outlines the testing strategy and plan for the SOTA API. The tests
       1. Access the API route
     - **Test Data:** - URL path with sport ID that exists in database.
     - **Expected Result:** Response returns detail about sport with the corresponding ID.
-    - **Status:** To be tested
+    - **Status:** Pass
 
   - **Test Case:** With non-existing sport ID
     - **Pre-conditions:** None
@@ -66,7 +66,7 @@ This document outlines the testing strategy and plan for the SOTA API. The tests
       1. Access the API route
     - **Test Data:** - URL path with sport ID that does not exist in database.
     - **Expected Result:** Response returns empty data.
-    - **Status:** To be tested
+    - **Status:** Pass
 
 ### Medal API Tests
 - **Test Scenario:** POST /medals/update_medal
@@ -79,7 +79,7 @@ This document outlines the testing strategy and plan for the SOTA API. The tests
       2. Request from API using the body
     - **Test Data:** - JSON body with correct fields
     - **Expected Result:** Response returns body with Success. Has correct medal in database.
-    - **Status:** To be tested
+    - **Status:** Pass
 
   - **Test Case:** With missing field
     - **Pre-conditions:** 
@@ -90,7 +90,7 @@ This document outlines the testing strategy and plan for the SOTA API. The tests
       2. Request from API using the body
     - **Test Data:** - JSON body that missing some field such as medal count, sport_id
     - **Expected Result:** ""msg"": ""field required"". Response returns status 400.
-    - **Status:** To be tested
+    - **Status:** Pass
 
   - **Test Case:** Enter a country that does not participate in a certain type of sport.
     - **Pre-conditions:** 
@@ -101,7 +101,7 @@ This document outlines the testing strategy and plan for the SOTA API. The tests
       2. Request from API using the body
     - **Test Data:** - JSON body with a country field containing an invalid country code.
     - **Expected Result:** Raise error. Response returns status 400.
-    - **Status:** To be tested
+    - **Status:** Pass
 
   - **Test Case:** Enter a Sport_id that does not exist.
     - **Pre-conditions:** 
@@ -112,7 +112,7 @@ This document outlines the testing strategy and plan for the SOTA API. The tests
       2. Request from API using the body
     - **Test Data:** - JSON body with a Sport_id that does not exist.
     - **Expected Result:** Raise error. Response returns status 400.
-    - **Status:** To be tested
+    - **Status:** Pass
 
   - **Test Case:** Enter a Sub_Sport_id that does not exist.
     - **Pre-conditions:** 
@@ -123,7 +123,7 @@ This document outlines the testing strategy and plan for the SOTA API. The tests
       2. Request from API using the body
     - **Test Data:** - JSON body with a Sub_Sport_id that does not exist.
     - **Expected Result:** Raise error. Response returns status 400.
-    - **Status:** To be tested
+    - **Status:** Pass
 
 ### Medal Retrieval API Tests
 - **Test Scenario:** GET /medal/c/:country_code
@@ -133,7 +133,7 @@ This document outlines the testing strategy and plan for the SOTA API. The tests
       1. Access the API route
     - **Test Data:** - URL path with correct country_code
     - **Expected Result:** Response returns detail about medal count with the corresponding country code.
-    - **Status:** To be tested
+    - **Status:** Pass
 
   - **Test Case:** Enter a URL path with a country parameter that does not exist.
     - **Pre-conditions:** None
@@ -141,7 +141,7 @@ This document outlines the testing strategy and plan for the SOTA API. The tests
       1. Access the API route
     - **Test Data:** - URL path with incorrect country_code
     - **Expected Result:** Response returns empty data.
-    - **Status:** To be tested
+    - **Status:** Pass
 
 - **Test Scenario:** GET /medal/s/:sport_id
   - **Test Case:** Enter a URL path with a sport id parameter that does exist.
@@ -150,7 +150,7 @@ This document outlines the testing strategy and plan for the SOTA API. The tests
       1. Access the API route
     - **Test Data:** - URL path with correct sport_id
     - **Expected Result:** Response returns detail about medal count with the corresponding sport ID.
-    - **Status:** To be tested
+    - **Status:** Pass
 
   - **Test Case:** Enter a URL path with a sport id parameter that does not exist.
     - **Pre-conditions:** None
@@ -158,7 +158,7 @@ This document outlines the testing strategy and plan for the SOTA API. The tests
       1. Access the API route
     - **Test Data:** - URL path with incorrect sport_id
     - **Expected Result:** Response returns empty data.
-    - **Status:** To be tested
+    - **Status:** Pass
 
 - **Test Scenario:** GET /medal/s/:sport_id/t/:type_id
   - **Test Case:** Enter a URL path with a sport id and subsport type id that exist.
@@ -167,7 +167,7 @@ This document outlines the testing strategy and plan for the SOTA API. The tests
       1. Access the API route
     - **Test Data:** - URL path with correct sport_id and type_id
     - **Expected Result:** Response returns detail about medal count with the corresponding sport and type ID.
-    - **Status:** To be tested
+    - **Status:** Pass
 
   - **Test Case:** Enter a URL path with a sport id that exist and subsport type id that does not exist.
     - **Pre-conditions:** None
@@ -175,7 +175,7 @@ This document outlines the testing strategy and plan for the SOTA API. The tests
       1. Access the API route
     - **Test Data:** - URL path with sport_id that exist but type_id doesn't exist
     - **Expected Result:** Response returns empty data.
-    - **Status:** To be tested
+    - **Status:** Pass
 
   - **Test Case:** Enter a URL path with a sport id that does not exist and subsport type id that exist.
     - **Pre-conditions:** None
@@ -183,7 +183,7 @@ This document outlines the testing strategy and plan for the SOTA API. The tests
       1. Access the API route
     - **Test Data:** - URL path with sport_id that not exist but type_id does exist
     - **Expected Result:** Response returns empty data.
-    - **Status:** To be tested
+    - **Status:** Pass
 
   - **Test Case:** Enter a URL path with a sport id and subsport type id that does not exist.
     - **Pre-conditions:** None
@@ -191,7 +191,7 @@ This document outlines the testing strategy and plan for the SOTA API. The tests
       1. Access the API route
     - **Test Data:** - URL path with non-exist sport_id and type_id
     - **Expected Result:** Response returns empty data.
-    - **Status:** To be tested
+    - **Status:** Pass
 
 ### Audient API Tests
 - **Test Scenario:** POST /audient/update_audient_info
@@ -204,7 +204,7 @@ This document outlines the testing strategy and plan for the SOTA API. The tests
       2. Request from API using the body
     - **Test Data:** - JSON body with correct fields
     - **Expected Result:** Response returns body with Success. Has correct audience in database.
-    - **Status:** To be tested
+    - **Status:** Pass
 
   - **Test Case:** With missing field
     - **Pre-conditions:** 
@@ -215,7 +215,7 @@ This document outlines the testing strategy and plan for the SOTA API. The tests
       2. Request from API using the body
     - **Test Data:** - JSON body that missing some field such as id, country, or gender
     - **Expected Result:** ""msg"": ""field required"". Response returns status 400.
-    - **Status:** To be tested
+    - **Status:** Pass
 
   - **Test Case:** Enter invalid country code
     - **Pre-conditions:** 
@@ -226,7 +226,7 @@ This document outlines the testing strategy and plan for the SOTA API. The tests
       2. Request from API using the body
     - **Test Data:** - JSON body with a country field containing an invalid country code.
     - **Expected Result:** Raise error. Response returns status 400.
-    - **Status:** To be tested
+    - **Status:** Pass
 
   - **Test Case:** Enter invalid sport_id
     - **Pre-conditions:** 
@@ -237,7 +237,7 @@ This document outlines the testing strategy and plan for the SOTA API. The tests
       2. Request from API using the body
     - **Test Data:** - JSON body with a Sport_id that does not exist.
     - **Expected Result:** Raise error. Response returns status 400.
-    - **Status:** To be tested
+    - **Status:** Pass
 
   - **Test Case:** Enter gender other than M, F, N
     - **Pre-conditions:** 
@@ -248,7 +248,7 @@ This document outlines the testing strategy and plan for the SOTA API. The tests
       2. Request from API using the body
     - **Test Data:** - JSON body with invalid gender value
     - **Expected Result:** ""msg"": ""Invalid value for gender. It must be 'M', 'F', or 'N'."". Response returns status 400.
-    - **Status:** To be tested
+    - **Status:** Pass
 
 ## Test Files
 

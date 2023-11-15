@@ -198,7 +198,7 @@ class TestGetMedal(setUpTest):
         )
 
     @patch("sota.routers.medal_router.medal_collection.aggregate")
-    def test_get_medal_by_subsport_id_with_by_unrecorded_sport_id(
+    def test_get_medal_by_subsport_id_with_unrecorded_sport_id(
         self, mock_retrieve_medal
     ):
         """
@@ -214,7 +214,7 @@ class TestGetMedal(setUpTest):
         self.assertEqual(response.json(), {})
 
     @patch("sota.routers.medal_router.medal_collection.aggregate")
-    def test_get_medal_by_subsport_id_with_by_unrecorded_sub_sport_id(
+    def test_get_medal_by_subsport_id_with_unrecorded_sub_sport_id(
         self, mock_retrieve_medal
     ):
         """
@@ -230,7 +230,7 @@ class TestGetMedal(setUpTest):
         self.assertEqual(response.json(), {})
 
     @patch("sota.routers.medal_router.medal_collection.aggregate")
-    def test_get_medal_by_subsport_id_with_by_unrecorded_sport_id_and_sub_sport_id(
+    def test_get_medal_by_subsport_id_with_unrecorded_sport_id_and_sub_sport_id(
         self, mock_retrieve_medal
     ):
         """
